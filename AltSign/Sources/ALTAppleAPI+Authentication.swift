@@ -229,7 +229,7 @@ private extension ALTAppleAPI {
                         guard let verificationCode = verificationCode else { throw ALTAppleAPIError(.requiresTwoFactorAuthentication) }
 
                         var request = self.makeTwoFactorCodeRequest(url: verifyURL, dsid: dsid, idmsToken: idmsToken, anisetteData: anisetteData)
-                        request.allHTTPHeaderFields?["security-code"] = verificationCode
+                        request.setValue(verificationCode, forHTTPHeaderField: "security-code")
                         
                         let verifyCodeTask = self.session.dataTask(with: request) { (data, response, error) in
                             do
