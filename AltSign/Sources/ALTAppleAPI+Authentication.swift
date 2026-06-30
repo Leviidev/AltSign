@@ -214,10 +214,11 @@ private extension ALTAppleAPI {
                                            anisetteData: ALTAnisetteData,
                                            verificationHandler: @escaping (@escaping (String?) -> Void) -> Void,
                                            completionHandler: @escaping (Result<Void, Error>) -> Void) {
-        let requestURL = URL(string: "https://gsa.apple.com/auth/verify/trusteddevice")!
+        let requestURL = URL(string: "https://gsa.apple.com/auth/verify/trusteddevice/put")!
         let verifyURL = URL(string: "https://gsa.apple.com/grandslam/GsService2/validate")!
 
-        let request = makeTwoFactorCodeRequest(url: requestURL, dsid: dsid, idmsToken: idmsToken, anisetteData: anisetteData)
+        var request = makeTwoFactorCodeRequest(url: requestURL, dsid: dsid, idmsToken: idmsToken, anisetteData: anisetteData)
+        request.httpMethod = "PUT"
 
         let requestCodeTask = session.dataTask(with: request) { data, _, error in
             do {
