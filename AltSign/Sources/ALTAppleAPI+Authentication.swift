@@ -31,8 +31,8 @@ public extension ALTAppleAPI
                             anisetteData: ALTAnisetteData,
                             verificationHandler: ((@escaping (String?) -> Void) -> Void)?,
                             completionHandler: @escaping (ALTAccount?, ALTAppleAPISession?, Error?) -> Void) {
-        // Authenticating only works with lowercase email address, even if Apple ID contains capital letters.
-        let sanitizedAppleID = unsanitizedAppleID.lowercased()
+        // Authenticating only works with lowercase email address without whitespace, even if Apple ID contains capital letters.
+        let sanitizedAppleID = unsanitizedAppleID.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
 
         do {
             let clientDictionary = [
@@ -214,11 +214,10 @@ private extension ALTAppleAPI {
                                            anisetteData: ALTAnisetteData,
                                            verificationHandler: @escaping (@escaping (String?) -> Void) -> Void,
                                            completionHandler: @escaping (Result<Void, Error>) -> Void) {
-        let requestURL = URL(string: "https://gsa.apple.com/auth/verify/trusteddevice/put")!
+        let requestURL = URL(string: "https://gsa.apple.com/auth/verify/trusteddevice")!
         let verifyURL = URL(string: "https://gsa.apple.com/grandslam/GsService2/validate")!
 
-        var request = makeTwoFactorCodeRequest(url: requestURL, dsid: dsid, idmsToken: idmsToken, anisetteData: anisetteData)
-        request.httpMethod = "PUT"
+        let request = makeTwoFactorCodeRequest(url: requestURL, dsid: dsid, idmsToken: idmsToken, anisetteData: anisetteData)
 
         let requestCodeTask = session.dataTask(with: request) { data, _, error in
             do {
